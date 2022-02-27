@@ -25,26 +25,24 @@ import java.util.Locale;
 
 public class DateTimeExamples {
 
-    private static final ThreadLocal<DateFormat> formatters = new ThreadLocal<DateFormat>() {
-
-        @Override
-        protected DateFormat initialValue() {
-            return new SimpleDateFormat("dd-MMM-yyyy");
-        }
-    };
+    private static final ThreadLocal<DateFormat> formatters = ThreadLocal.withInitial(() -> new SimpleDateFormat("dd-MMM-yyyy"));
 
     public static void main(String[] args) {
+        System.out.println("------------useOldDate()------------");
         useOldDate();
+        System.out.println("------------useLocalDate()------------");
         useLocalDate();
+        System.out.println("------------useTemporalAdjuster()------------");
         useTemporalAdjuster();
+        System.out.println("------------useDateFormatter()-------------");
         useDateFormatter();
     }
 
     private static void useOldDate() {
         Date date = new Date(114, 2, 18);
-        System.out.println(date);
+        System.out.println(date); // Tue Mar 18 00:00:00 CST 2014
 
-        System.out.println(formatters.get().format(date));
+        System.out.println(formatters.get().format(date)); // 18-3月-2014
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2014, Calendar.FEBRUARY, 18);
@@ -59,7 +57,7 @@ public class DateTimeExamples {
         DayOfWeek dow = date.getDayOfWeek(); // TUESDAY
         int len = date.lengthOfMonth(); // 31 (days in March)
         boolean leap = date.isLeapYear(); // false (not a leap year)
-        System.out.println(date);
+        System.out.println(date); // 2014-03-18
 
         // get方法
         int y = date.get(ChronoField.YEAR);
@@ -70,33 +68,33 @@ public class DateTimeExamples {
         int hour = time.getHour(); // 13
         int minute = time.getMinute(); // 45
         int second = time.getSecond(); // 20
-        System.out.println(time);
+        System.out.println(time); // 13:45:20
 
-        LocalDateTime dt1 = LocalDateTime.of(2014, Month.MARCH, 18, 13, 45, 20); // 2014-03-18T13:45
+        LocalDateTime dt1 = LocalDateTime.of(2014, Month.MARCH, 18, 13, 45, 20);
         LocalDateTime dt2 = LocalDateTime.of(date, time);
         LocalDateTime dt3 = date.atTime(13, 45, 20);
         LocalDateTime dt4 = date.atTime(time);
         LocalDateTime dt5 = time.atDate(date);
-        System.out.println(dt1);
+        System.out.println(dt1); // 2014-03-18T13:45:20
 
         LocalDate date1 = dt1.toLocalDate();
-        System.out.println(date1);
+        System.out.println(date1); // 2014-03-18
         LocalTime time1 = dt1.toLocalTime();
-        System.out.println(time1);
+        System.out.println(time1); // 13:45:20
 
         Instant instant = Instant.ofEpochSecond(44 * 365 * 86400);
         Instant now = Instant.now();
 
         Duration d1 = Duration.between(LocalTime.of(13, 45, 10), time);
         Duration d2 = Duration.between(instant, now);
-        System.out.println(d1.getSeconds());
-        System.out.println(d2.getSeconds());
+        System.out.println(d1.getSeconds()); // 10
+        System.out.println(d2.getSeconds()); // 258304688
 
         Duration threeMinutes = Duration.of(3, ChronoUnit.MINUTES);
-        System.out.println(threeMinutes);
+        System.out.println(threeMinutes); // PT3M
 
         JapaneseDate japaneseDate = JapaneseDate.from(date);
-        System.out.println(japaneseDate);
+        System.out.println(japaneseDate); // Japanese Heisei 26-03-18
     }
 
     private static void useTemporalAdjuster() {
@@ -155,9 +153,9 @@ public class DateTimeExamples {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter italianFormatter = DateTimeFormatter.ofPattern("d. MMMM yyyy", Locale.ITALIAN);
 
-        System.out.println(date.format(DateTimeFormatter.ISO_LOCAL_DATE));
-        System.out.println(date.format(formatter));
-        System.out.println(date.format(italianFormatter));
+        System.out.println(date.format(DateTimeFormatter.ISO_LOCAL_DATE)); // 2014-03-18
+        System.out.println(date.format(formatter)); // 18/03/2014
+        System.out.println(date.format(italianFormatter)); // 18. marzo 2014
 
         DateTimeFormatter complexFormatter = new DateTimeFormatterBuilder()
                 .appendText(ChronoField.DAY_OF_MONTH)
@@ -168,7 +166,7 @@ public class DateTimeExamples {
                 .parseCaseInsensitive()
                 .toFormatter(Locale.ITALIAN);
 
-        System.out.println(date.format(complexFormatter));
+        System.out.println(date.format(complexFormatter)); // 18. marzo 2014
     }
 
 }
