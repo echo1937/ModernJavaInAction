@@ -10,15 +10,15 @@ import java.util.concurrent.Future;
 
 public class ExecutorServiceExample {
 
-  public static void main(String[] args) throws ExecutionException, InterruptedException {
-    int x = 1337;
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        int x = 1337;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(2);
-    Future<Integer> y = executorService.submit(() -> fo(x));
-    Future<Integer> z = executorService.submit(() -> go(x));
-    System.out.println(y.get() + z.get());
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        Future<Integer> y = executorService.submit(() -> fo(x));
+        Future<Integer> z = executorService.submit(() -> go(x));
+        System.out.println(y.get() + z.get());
 
-    executorService.shutdown();
-  }
+        executorService.shutdown();
+    }
 
 }
