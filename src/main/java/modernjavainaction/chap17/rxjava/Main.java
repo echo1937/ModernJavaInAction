@@ -7,16 +7,15 @@ import modernjavainaction.chap17.TempInfo;
 
 public class Main {
 
-  public static void main(String[] args) {
-    Observable<TempInfo> observable = getTemperature("New York");
-    observable.subscribe(new TempObserver());
+    public static void main(String[] args) {
+        Observable<TempInfo> observable = getTemperature("New York");
+        observable.subscribe(new TempObserver());
 
-    try {
-      Thread.sleep(10000L);
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
-    catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-  }
 
 }
